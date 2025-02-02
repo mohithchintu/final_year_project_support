@@ -12,8 +12,3 @@ func ComputeHMAC(message string, key *big.Int) string {
 	h.Write([]byte(message))
 	return hex.EncodeToString(h.Sum(nil))
 }
-
-func VerifyHMAC(message string, receivedHMAC string, key *big.Int) bool {
-	expectedHMAC := ComputeHMAC(message, key)
-	return hmac.Equal([]byte(expectedHMAC), []byte(receivedHMAC))
-}

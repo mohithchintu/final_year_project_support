@@ -5,6 +5,7 @@ import (
 	"math/big"
 
 	"github.com/mohithchintu/final_year_project_support/helpers"
+	"github.com/mohithchintu/final_year_project_support/hmac"
 	"github.com/mohithchintu/final_year_project_support/models"
 	"github.com/mohithchintu/final_year_project_support/sss"
 )
@@ -66,7 +67,12 @@ func main() {
 		}
 	}
 
-	DisplayDevices(devices)
+	// DisplayDevices(devices)
+	for _, device := range devices {
+		message := "Hello Devices"
+		hmacValue := hmac.ComputeHMAC(message, device.GroupKey)
+		fmt.Printf("HMAC of Group Key for %s: %s\n", device.ID, hmacValue)
+	}
 
 	// testing
 	// fmt.Println("\nReconstructing secrets for devices:")
