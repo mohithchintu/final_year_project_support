@@ -43,7 +43,7 @@ func main() {
 	}
 	// DisplayDevices(devices)
 	for _, device := range devices {
-		device.Shares = sss.GenerateShares(device, 4)
+		device.Shares = sss.GenerateShares(device, device.Threshold+1)
 	}
 	// DisplayDevices(devices)
 

@@ -23,3 +23,14 @@ func GenerateGroupKey(device *models.Device) error {
 	device.GroupKey = secret
 	return nil
 }
+
+func GenerateGroup_Key(device *models.Device) error {
+	secret := big.NewInt(0)
+	for _, peer := range device.Peers {
+		secret.Add(secret, peer.PrivateKey)
+	}
+	secret.Add(secret, device.PrivateKey)
+	secret.Mod(secret, big.NewInt(10000000999))
+	device.GroupKey = secret
+	return nil
+}
