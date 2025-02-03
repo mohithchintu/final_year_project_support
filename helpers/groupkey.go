@@ -8,7 +8,7 @@ import (
 	"github.com/mohithchintu/final_year_project_support/sss"
 )
 
-func GenerateGroupKey(device *models.Device) error {
+func GenerateGroup_Key(device *models.Device) error {
 	secret := big.NewInt(0)
 	for _, peer := range device.Peers {
 		part_secret, err := sss.ReconstructPolynomial(peer.Shares)
@@ -24,7 +24,7 @@ func GenerateGroupKey(device *models.Device) error {
 	return nil
 }
 
-func GenerateGroup_Key(device *models.Device) error {
+func GenerateGroupKey(device *models.Device) error {
 	secret := big.NewInt(0)
 	for _, peer := range device.Peers {
 		secret.Add(secret, peer.PrivateKey)

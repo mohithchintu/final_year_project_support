@@ -61,13 +61,13 @@ func main() {
 	device4.AddPeer(device3)
 
 	for _, device := range devices {
-		err := helpers.GenerateGroupKey(device)
+		err := helpers.GenerateGroup_Key(device)
 		if err != nil {
 			fmt.Printf("Error generating group key for %s: %v\n", device.ID, err)
 		}
 	}
 
-	// DisplayDevices(devices)
+	DisplayDevices(devices)
 	for _, device := range devices {
 		message := "Hello Devices"
 		hmacValue := hmac.ComputeHMAC(message, device.GroupKey)
