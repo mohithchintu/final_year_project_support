@@ -1,15 +1,17 @@
 package sss
 
 import (
+	"crypto/elliptic"
 	"fmt"
 	"math/big"
-
+	"github.com/mohithchintu/final_year_project_support/helpers"
 	"github.com/mohithchintu/final_year_project_support/models"
 )
 
-func ReconstructPolynomial(shares []*models.Share) (*big.Int, error) {
-	if len(shares) < 2 {
-		return nil, fmt.Errorf("at least 2 shares are required for reconstruction")
+// ReconstructPolynomialWithECDH reconstructs the polynomial secret using ECDH-derived shared secrets
+func ReconstructPolynomialWithECDH(shares []*models.Share, curve elliptic.Curve, device *models.Device) (*big.Int, error) {
+	if len(shares) < device.Threshold {
+		return nil, fmt.Errorf("at least %d shares are required for reconstruction", device.Threshold)
 	}
 
 	secret := big.NewInt(0)
@@ -21,16 +23,14 @@ func ReconstructPolynomial(shares []*models.Share) (*big.Int, error) {
 
 		for j, otherShare := range shares {
 			if i != j {
-				xDiff := new(big.Int).Sub(share.X, otherShare.X)
-				if xDiff.Cmp(big.NewInt(0)) == 0 {
-					return nil, fmt.Errorf("duplicate share X values detected")
+				peerPriv := otherShare.Y
+				_, err := helpers.DeriveSharedSecret(curve, device.PrivateKey, peerPriv)
+				if err != nil {
+					return nil, fmt.Errorf("error in deriving shared secret: %v", err)
 				}
 
-				numerator.Mul(numerator, new(big.Int).Neg(otherShare.X))
-				numerator.Mod(numerator, modulus)
-
-				denominator.Mul(denominator, xDiff)
-				denominator.Mod(denominator, modulus)
+				numerator.Mul(numerator, new(big.Int).Neg(share.X))
+				denominator.Mul(denominator, new(big.Int).Sub(share.X, otherShare.X))
 			}
 		}
 

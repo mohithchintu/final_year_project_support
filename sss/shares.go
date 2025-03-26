@@ -6,6 +6,7 @@ import (
 	"github.com/mohithchintu/final_year_project_support/models"
 )
 
+// GenerateShares generates shares for a device based on its polynomial
 func GenerateShares(device *models.Device, n int) []*models.Share {
 	coefficients := device.Coefficients
 	shares := make([]*models.Share, n)
@@ -17,6 +18,7 @@ func GenerateShares(device *models.Device, n int) []*models.Share {
 	return shares
 }
 
+// EvaluatePolynomial evaluates the polynomial at a given point x
 func EvaluatePolynomial(coefficients []*big.Int, x *big.Int) *big.Int {
 	result := big.NewInt(0)
 	temp := big.NewInt(0)

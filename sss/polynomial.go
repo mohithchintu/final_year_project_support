@@ -8,6 +8,7 @@ import (
 	"github.com/mohithchintu/final_year_project_support/models"
 )
 
+// GeneratePolynomial generates the polynomial coefficients for a device using its private key
 func GeneratePolynomial(device *models.Device) error {
 	degree := device.Threshold
 	if device.PrivateKey == nil {

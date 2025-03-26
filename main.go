@@ -1,3 +1,59 @@
+// package main
+
+// import (
+// 	"fmt"
+// 	"math/big"
+
+// 	"github.com/mohithchintu/final_year_project_support/helpers"
+// 	"github.com/mohithchintu/final_year_project_support/models"
+// )
+
+// func main() {
+// 	// Create devices and assign them private keys
+// 	device1 := models.NewDevice("device1", big.NewInt(12345), 2)
+// 	device2 := models.NewDevice("device2", big.NewInt(67890), 2)
+
+// 	// Add peers
+// 	device1.AddPeer(device2)
+// 	device2.AddPeer(device1)
+
+//		// Generate group key using ECC-based approach
+//		err := helpers.GenerateGroupKeyWithECDH(device1)
+//		if err != nil {
+//			fmt.Println("Error generating group key for device1:", err)
+//		}
+//		fmt.Printf("Device ID: %s\n", device1.ID)
+//		fmt.Printf("  Private Key: %s\n", device1.PrivateKey.String())
+//		fmt.Printf("  Threshold: %d\n", device1.Threshold)
+//		fmt.Printf("  Group Key: %s\n", device1.GroupKey.String())
+//		// fmt.Printf("  Peers: ")
+//		// for _, peer := range device1.Peers {
+//		// 	fmt.Printf("%s ", peer.ID)
+//		// }
+//		// for i, coeff := range device1.Coefficients {
+//		// 	fmt.Printf("\n  Coefficient %d: %s", i, coeff.String())
+//		// }
+//		// for _, share := range device1.Shares {
+//		// 	fmt.Printf("\n  Share X: %s, Y: %s", share.X.String(), share.Y.String())
+//		// }
+//		fmt.Println("\n---------------------")
+//		//----------------------------------------------------------------------------------------
+//		fmt.Printf("Device ID: %s\n", device2.ID)
+//		fmt.Printf("  Private Key: %s\n", device2.PrivateKey.String())
+//		fmt.Printf("  Threshold: %d\n", device2.Threshold)
+//		fmt.Printf("  Group Key: %s\n", device2.GroupKey.String())
+//		// fmt.Printf("  Peers: ")
+//		// for _, peer := range device2.Peers {
+//		// 	fmt.Printf("%s ", peer.ID)
+//		// }
+//		// for i, coeff := range device2.Coefficients {
+//		// 	fmt.Printf("\n  Coefficient %d: %s", i, coeff.String())
+//		// }
+//		// for _, share := range device2.Shares {
+//		// 	fmt.Printf("\n  Share X: %s, Y: %s", share.X.String(), share.Y.String())
+//		// }
+//		fmt.Println("\n---------------------")
+//	}
 package main
 
 import (
@@ -5,86 +61,40 @@ import (
 	"math/big"
 
 	"github.com/mohithchintu/final_year_project_support/helpers"
-	"github.com/mohithchintu/final_year_project_support/hmac"
 	"github.com/mohithchintu/final_year_project_support/models"
-	"github.com/mohithchintu/final_year_project_support/sss"
 )
 
-func DisplayDevices(devices []*models.Device) {
-	for _, device := range devices {
-		fmt.Printf("Device ID: %s\n", device.ID)
-		fmt.Printf("  Private Key: %s\n", device.PrivateKey.String())
-		fmt.Printf("  Threshold: %d\n", device.Threshold)
-		fmt.Printf("  Group Key: %s\n", device.GroupKey.String())
-		fmt.Printf("  Peers: ")
-		for _, peer := range device.Peers {
-			fmt.Printf("%s ", peer.ID)
-		}
-		for i, coeff := range device.Coefficients {
-			fmt.Printf("\n  Coefficient %d: %s", i, coeff.String())
-		}
-		for _, share := range device.Shares {
-			fmt.Printf("\n  Share X: %s, Y: %s", share.X.String(), share.Y.String())
-		}
-		fmt.Println("\n---------------------")
-	}
-}
-
 func main() {
-	device1 := models.NewDevice("Device1", big.NewInt(123456789), 3)
-	device2 := models.NewDevice("Device2", big.NewInt(987654321), 3)
-	device3 := models.NewDevice("Device3", big.NewInt(135790864), 3)
-	device4 := models.NewDevice("Device4", big.NewInt(245672340), 3)
+	// Create devices and assign them private keys
+	device1 := models.NewDevice("device1", big.NewInt(12345), 2)
+	device2 := models.NewDevice("device2", big.NewInt(67890), 2)
 
-	devices := []*models.Device{device1, device2, device3, device4}
-	// DisplayDevices(devices)
-	for _, device := range devices {
-		sss.GeneratePolynomial(device)
-	}
-	// DisplayDevices(devices)
-	for _, device := range devices {
-		device.Shares = sss.GenerateShares(device, device.Threshold+1)
-	}
-	// DisplayDevices(devices)
-
+	// Add peers
 	device1.AddPeer(device2)
-	device1.AddPeer(device3)
-	device1.AddPeer(device4)
 	device2.AddPeer(device1)
-	device2.AddPeer(device3)
-	device2.AddPeer(device4)
-	device3.AddPeer(device1)
-	device3.AddPeer(device2)
-	device3.AddPeer(device4)
-	device4.AddPeer(device1)
-	device4.AddPeer(device2)
-	device4.AddPeer(device3)
 
-	for _, device := range devices {
-		err := helpers.GenerateGroup_Key(device)
-		if err != nil {
-			fmt.Printf("Error generating group key for %s: %v\n", device.ID, err)
-		}
+	// Generate group key using ECC-based approach for Device 1
+	err := helpers.GenerateGroupKeyWithECDH(device1)
+	if err != nil {
+		fmt.Println("Error generating group key for device1:", err)
 	}
 
-	DisplayDevices(devices)
-	for _, device := range devices {
-		message := "Hello Devices"
-		hmacValue := hmac.ComputeHMAC(message, device.GroupKey)
-		fmt.Printf("HMAC of Group Key for %s: %s\n", device.ID, hmacValue)
+	// Generate group key using ECC-based approach for Device 2
+	err = helpers.GenerateGroupKeyWithECDH(device2)
+	if err != nil {
+		fmt.Println("Error generating group key for device2:", err)
 	}
 
-	// testing
-	// fmt.Println("\nReconstructing secrets for devices:")
-	// for _, device := range devices {
-	// 	reconstructedSecret, err := sss.ReconstructPolynomial(device.Shares)
-	// 	if err != nil {
-	// 		fmt.Printf("Error reconstructing secret for %s: %v\n", device.ID, err)
-	// 	} else {
-	// 		fmt.Printf("Reconstructed Secret for %s: %s\n", device.ID, reconstructedSecret.String())
-	// 		message := "Verification Message"
-	// 		hmacValue := hmac.ComputeHMAC(message, reconstructedSecret)
-	// 		fmt.Printf("HMAC of Reconstructed Secret for %s: %s\n", device.ID, hmacValue)
-	// 	}
-	// }
+	// Now both devices should have the same group key
+	fmt.Printf("Device ID: %s\n", device1.ID)
+	fmt.Printf("  Private Key: %s\n", device1.PrivateKey.String())
+	fmt.Printf("  Threshold: %d\n", device1.Threshold)
+	fmt.Printf("  Group Key: %s\n", device1.GroupKey.String())
+
+	// Display Device 2's information
+	fmt.Println("---------------------")
+	fmt.Printf("Device ID: %s\n", device2.ID)
+	fmt.Printf("  Private Key: %s\n", device2.PrivateKey.String())
+	fmt.Printf("  Threshold: %d\n", device2.Threshold)
+	fmt.Printf("  Group Key: %s\n", device2.GroupKey.String())
 }
