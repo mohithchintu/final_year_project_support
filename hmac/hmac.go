@@ -3,13 +3,15 @@ package hmac
 import (
 	"crypto/hmac"
 	"crypto/sha256"
-	"encoding/hex"
-	"math/big"
 )
 
-// ComputeHMAC generates an HMAC using the shared secret key
-func ComputeHMAC(message string, key *big.Int) string {
-	h := hmac.New(sha256.New, key.Bytes())
-	h.Write([]byte(message))
-	return hex.EncodeToString(h.Sum(nil))
+func GenerateHMAC(data string, key []byte) []byte {
+	h := hmac.New(sha256.New, key)
+	h.Write([]byte(data))
+	return h.Sum(nil)
+}
+
+func VerifyHMAC(data string, key []byte, hmacValue []byte) bool {
+	expectedHMAC := GenerateHMAC(data, key)
+	return hmac.Equal(expectedHMAC, hmacValue)
 }
