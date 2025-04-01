@@ -28,8 +28,14 @@ func DeviceConnect(device1 *device.Device, device2 *device.Device) {
 		return
 	}
 
-	device1.SharedSecret = append(device1.SharedSecret, decryptKey1)
-	device2.SharedSecret = append(device2.SharedSecret, decryptKey2)
+	device1.SharedPeers = append(device1.SharedPeers, &device.Peer{
+		DeviceName: device2.DeviceName,
+		Share:      decryptKey1,
+	})
+	device2.SharedPeers = append(device2.SharedPeers, &device.Peer{
+		DeviceName: device1.DeviceName,
+		Share:      decryptKey2,
+	})
 
 	device1.Chachakey = nil
 	device2.Chachakey = nil

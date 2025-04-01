@@ -25,7 +25,7 @@ func main() {
 	devices := make([]*device.Device, numDevices)
 
 	for i, share := range shares {
-		devices[i] = device.NewDevice(share)
+		devices[i] = device.NewDevice(share, i+1)
 	}
 
 	// helpers.DisplayDevices(devices)
@@ -42,5 +42,7 @@ func main() {
 	for _, device := range devices {
 		utils.ReconstructSecret(device)
 	}
+
+	helpers.DisplayDevices(devices)
 
 }

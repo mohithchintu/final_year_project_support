@@ -43,3 +43,13 @@ func BytesToPair(data []byte) (int, int, error) {
 	}
 	return int(a), int(b), nil
 }
+
+func IntToBytes(n int) []byte {
+	buf := new(bytes.Buffer)
+	err := binary.Write(buf, binary.BigEndian, int32(n))
+	if err != nil {
+		fmt.Println("Error converting int to bytes:", err)
+		return nil
+	}
+	return buf.Bytes()
+}

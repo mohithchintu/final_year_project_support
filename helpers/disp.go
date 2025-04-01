@@ -9,6 +9,7 @@ import (
 )
 
 func DisplayDevice(device *device.Device) {
+	fmt.Println("Device Name:", device.DeviceName)
 	// if device.PublicKey != nil {
 	// 	fmt.Println("Public Key:")
 	// 	fmt.Println("  X:", device.PublicKey.X)
@@ -27,15 +28,16 @@ func DisplayDevice(device *device.Device) {
 	fmt.Println("  X:", device.Share.X)
 	fmt.Println("  Y:", device.Share.Y)
 
-	if len(device.SharedSecret) > 0 {
+	if len(device.SharedPeers) > 0 {
 		fmt.Println("Shared Secret:")
-		for i, secret := range device.SharedSecret {
-			valx, valy, err := BytesToPair(secret)
+		for _, peer := range device.SharedPeers {
+			fmt.Printf(" %s\n", peer.DeviceName)
+			valx, valy, err := BytesToPair(peer.Share)
 			if err != nil {
 				fmt.Println("Error converting secret to pair:", err)
 				continue
 			}
-			fmt.Printf("  %d: X: %d Y: %d\n", i, valx, valy)
+			fmt.Printf(" X: %d Y: %d\n", valx, valy)
 		}
 	} else {
 		fmt.Println("Shared Secret: nil")
@@ -47,18 +49,21 @@ func DisplayDevice(device *device.Device) {
 		fmt.Println("ChaCha Key: nil")
 	}
 
-	if len(device.FinalHMAC) > 0 {
-		fmt.Println("Final HMAC:", hex.EncodeToString(device.FinalHMAC))
+	if len(device.HMACS) > 0 {
+		fmt.Println("HMACs:")
+		for _, hmac := range device.HMACS {
+			fmt.Printf(" %s\n", hmac.DeviceName)
+			fmt.Printf(" HMAC: %s\n", hex.EncodeToString(hmac.FinalHMAC))
+		}
 	} else {
-		fmt.Println("Final HMAC: nil")
+		fmt.Println("HMACs: nil")
 	}
 
 	fmt.Println("")
 }
 
 func DisplayDevices(devices []*device.Device) {
-	for i, device := range devices {
-		fmt.Printf("Device %d:\n", i+1)
+	for _, device := range devices {
 		DisplayDevice(device)
 	}
 }
