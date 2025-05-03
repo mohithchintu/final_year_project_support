@@ -29,7 +29,7 @@ func DisplayDevice(device *device.Device) {
 	fmt.Println("  Y:", device.Share.Y)
 
 	if len(device.SharedPeers) > 0 {
-		fmt.Println("Shared Secret:")
+		fmt.Println("Peers Shared Secret:")
 		for _, peer := range device.SharedPeers {
 			fmt.Printf(" %s\n", peer.DeviceName)
 			valx, valy, err := BytesToPair(peer.Share)

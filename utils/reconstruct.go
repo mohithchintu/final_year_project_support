@@ -9,7 +9,7 @@ import (
 	"github.com/mohithchintu/final_year_project_support/sss"
 )
 
-func ReconstructSecret(dev *device.Device) {
+func ReconstructSecret(dev *device.Device, threshold int) {
 	shares := make([]sss.Share, 0)
 	for _, peer := range dev.SharedPeers {
 		valx, valy, err := helpers.BytesToPair(peer.Share)
@@ -20,7 +20,10 @@ func ReconstructSecret(dev *device.Device) {
 		shares = append(shares, sss.Share{X: valx, Y: valy})
 	}
 	shares = append(shares, dev.Share)
-	groupkey := sss.LagrangeInterpolation(shares)
+	groupkey := sss.LagrangeInterpolation(shares[:threshold])
+
+	// fmt.Println("Group Key:", groupkey)
+
 	groupkeyBytes := helpers.IntToBytes(groupkey)
 
 	hmacValue := hmac.GenerateHMAC(dev.DeviceName, groupkeyBytes)

@@ -8,6 +8,7 @@ import (
 )
 
 func DeviceConnect(device1 *device.Device, device2 *device.Device) {
+
 	device1.Chachakey = ecc.ComputeSharedSecret(device1.PrivateKey, device2.PublicKey)
 	device2.Chachakey = ecc.ComputeSharedSecret(device2.PrivateKey, device1.PublicKey)
 

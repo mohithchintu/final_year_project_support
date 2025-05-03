@@ -23,7 +23,7 @@ func GenerateShares(secret int, n, k int) []Share {
 	shares := make([]Share, n)
 	usedXValues := make(map[int]bool)
 
-	// printPolynomial(coefficients)
+	printPolynomial(coefficients)
 
 	for i := 0; i < n; i++ {
 		var x int

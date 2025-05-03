@@ -15,10 +15,11 @@ func main() {
 	// ecc.TestECC()
 
 	numDevices := 7
+	threshold := 5
 
 	secret := helpers.GenerateRandomSecret()
 
-	shares := sss.GenerateShares(secret, numDevices, numDevices)
+	shares := sss.GenerateShares(secret, numDevices, threshold)
 
 	// helpers.Displayshares(shares)
 
@@ -40,9 +41,9 @@ func main() {
 	// helpers.DisplayDevices(devices)
 
 	for _, device := range devices {
-		utils.ReconstructSecret(device)
+		utils.ReconstructSecret(device, threshold)
 	}
 
-	helpers.DisplayDevices(devices)
+	// helpers.DisplayDevices(devices)
 
 }
